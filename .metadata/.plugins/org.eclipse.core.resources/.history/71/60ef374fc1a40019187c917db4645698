@@ -1,0 +1,8 @@
+package org.dine.javaprojects.messenger.exceptions;
+
+public class DataNotFoundException extends RuntimeException{
+
+	
+	
+	
+}

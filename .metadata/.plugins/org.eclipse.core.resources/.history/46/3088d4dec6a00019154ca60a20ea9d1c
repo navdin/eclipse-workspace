@@ -1,0 +1,29 @@
+package org.dine.javaprojects.messenger.likesapi;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriInfo;
+
+import org.dine.javaprojects.messenger.Comment;
+
+public class LikesApi {
+	
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<String> likesby(@Context UriInfo info, Comment comment){
+		List<String> lp=new ArrayList<String>();
+		System.out.println("came to /likes");
+//		lp.add("person1");
+//		lp.add("person2");
+//		lp.add(info.getPath());
+//		lp.add(comment.getComment());
+		return lp;
+	}
+}

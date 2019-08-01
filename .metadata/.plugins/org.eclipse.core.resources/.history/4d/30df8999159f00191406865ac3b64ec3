@@ -1,0 +1,25 @@
+package org.dine.javaprojects.messenger;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+
+@Path("messages")
+public class MessageResources {
+
+	@GET
+	@Produces(MediaType.APPLICATION_XML)
+	public List<Message> message() {
+		Message m1=new Message("dine", "muke", "hey how r muke");
+		Message m2=new Message("muke", "dine", "hey how r dine");
+		List<Message> list=new ArrayList<Message>();
+		list.add(m1);
+		list.add(m2);
+		return list;
+	}
+	
+}

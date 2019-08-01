@@ -1,0 +1,38 @@
+package org.dine.javaprojects.messenger.models;
+
+public class ErrorMessage {
+	public ErrorMessage(){
+		
+	}
+	public ErrorMessage(String erM, int erCode, String desc) {
+		erMessage=erM;
+		this.erCode=erCode;
+		description=desc;
+	}
+	String erMessage;
+	int erCode;
+	String description;
+	public static int rem() {
+		return 1;
+	}
+	public String getErMessage() {
+		return erMessage;
+	}
+	public void setErMessage(String erMessage) {
+		this.erMessage = erMessage;
+	}
+	public int getErCode() {
+		return erCode;
+	}
+	public void setErCode(int erCode) {
+		this.erCode = erCode;
+	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	
+
+}
