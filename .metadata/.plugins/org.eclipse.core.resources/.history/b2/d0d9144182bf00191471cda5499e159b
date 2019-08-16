@@ -1,0 +1,47 @@
+package org.dine.javaprojects.messenger.models;
+
+import java.util.List;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+
+import org.dine.javaprojects.messenger.Message;
+
+@Entity
+public class Sim {
+
+	public Sim(){
+		
+	}
+	
+	
+	
+	Sim(long simNum, List<Message> msgList){
+		this.simNum=simNum;
+		this.msgList=msgList;
+	}
+	
+	@Id
+	long simNum;
+	
+	@ManyToMany(mappedBy="toSimList")
+	List<Message> msgList;
+
+	public long getSimNum() {
+		return simNum;
+	}
+
+	public void setSimNum(long simNum) {
+		this.simNum = simNum;
+	}
+
+	public List<Message> getMsgList() {
+		return msgList;
+	}
+
+	public void setMsgList(List<Message> msgList) {
+		this.msgList = msgList;
+	}
+	
+}

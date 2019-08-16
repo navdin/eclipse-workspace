@@ -1,0 +1,52 @@
+package spring.pack;
+
+import java.io.Serializable;
+import java.util.List;
+
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
+@Entity
+public class Triangle implements Serializable {
+
+	int s;
+	@Id @GeneratedValue
+	int tid;
+	@Id
+	int tang;
+	
+	@ElementCollection
+	List<Profile> lp;
+	
+	
+	public List<Profile> getLp() {
+		return lp;
+	}
+	public void setLp(List<Profile> lp) {
+		this.lp = lp;
+	}
+	public int getTang() {
+		return tang;
+	}
+	public void setTang(int tang) {
+		this.tang = tang;
+	}
+	public int getTid() {
+		return tid;
+	}
+	public void setTid(int tid) {
+		this.tid = tid;
+	}
+	public int getS() {
+		return s;
+	}
+	public void setS(int s) {
+		this.s = s;
+	}
+	public void tp() {
+		System.out.println("triangle here");
+	}
+	
+}

@@ -1,42 +1,97 @@
 package org.dine.javaprojects.messenger;
 
-import java.util.Date;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement
-public class Message {
+import org.dine.javaprojects.messenger.models.Profiles;
+import org.dine.javaprojects.messenger.models.Sim;
+
+
+@Entity
+public class Message implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	Message(){
 		
 	}
-	Message(String mto, String mfrom, String msg){
-		this.mto=mto;
-		this.mfrom=mfrom;
+	Message(ArrayList<Comment> commentList,  long fromSim, List<Sim> toSimList, List<Long> toList, String msg, Date dt){
+		this.commentList=commentList;
+		this.fromSim=fromSim;
+		this.toList=toList;
 		this.msg=msg;
+		this.dt=dt;
+		this.toSimList=toSimList;
 	}
-	long id;
-	String mto;
-	String mfrom;
+	@Id
+	long fromSim;
+	
+	@ElementCollection
+	List<Long> toList;
+	
+
+	@ManyToMany
+	List<Sim> toSimList=new ArrayList<Sim>();
 	String msg;
+	@Id
 	Date dt;
-	public String getMto() {
-		return mto;
+	@OneToMany
+	List<Comment> commentList=new ArrayList<Comment>();
+
+	
+	public List<Long> getToList() {
+		return toList;
 	}
-	public void setMto(String mto) {
-		this.mto = mto;
+	public void setToList(List<Long> toList) {
+		this.toList = toList;
 	}
-	public String getMfrom() {
-		return mfrom;
+	public List<Sim> getToSimList() {
+		return toSimList;
 	}
-	public void setMfrom(String mfrom) {
-		this.mfrom = mfrom;
+	public void setToSimList(List<Sim> toSimList) {
+		this.toSimList = toSimList;
 	}
+	public long getFromSim() {
+		return fromSim;
+	}
+	public void setFromSim(long fromSim) {
+		this.fromSim = fromSim;
+	}
+	
 	public String getMsg() {
 		return msg;
 	}
 	public void setMsg(String msg) {
 		this.msg = msg;
 	}
+	public Date getDt() {
+		return dt;
+	}
+	public void setDt(Date dt) {
+		this.dt = dt;
+	}
+	public List<Comment> getCommentList() {
+		return commentList;
+	}
+	public void setCommentList(List<Comment> commentList) {
+		this.commentList = commentList;
+	}
+	
+	
+	
+	
 	
 }

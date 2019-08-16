@@ -1,0 +1,82 @@
+package org.dine.javaprojects.messenger;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.xml.bind.annotation.XmlRootElement;
+
+import org.dine.javaprojects.messenger.models.Profiles;
+import org.dine.javaprojects.messenger.models.Sim;
+
+
+@Entity
+public class Message implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	Message(){
+		
+	}
+	Message(ArrayList<Comment> commentList, long fromSim, List<Sim> toList, String msg, Date dt){
+		this.commentList=commentList;
+		this.fromSim=fromSim;
+		this.toList=toList;
+		this.msg=msg;
+		this.dt=dt;
+	}
+	@Id
+	long fromSim;
+	@ManyToMany
+	List<Sim> toList;
+	String msg;
+	@Id
+	Date dt;
+	@OneToMany
+	List<Comment> commentList=new ArrayList<Comment>();
+
+	public long getFromSim() {
+		return fromSim;
+	}
+	public void setFromSim(long fromSim) {
+		this.fromSim = fromSim;
+	}
+	public List<Sim> getToList() {
+		return toList;
+	}
+	public void setToList(List<Sim> toList) {
+		this.toList = toList;
+	}
+	public String getMsg() {
+		return msg;
+	}
+	public void setMsg(String msg) {
+		this.msg = msg;
+	}
+	public Date getDt() {
+		return dt;
+	}
+	public void setDt(Date dt) {
+		this.dt = dt;
+	}
+	public List<Comment> getCommentList() {
+		return commentList;
+	}
+	public void setCommentList(List<Comment> commentList) {
+		this.commentList = commentList;
+	}
+	
+	
+	
+	
+	
+}

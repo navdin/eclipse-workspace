@@ -1,0 +1,23 @@
+package org.dine.javaprojects.messenger.models;
+
+import java.util.Date;
+
+public class RequestModel {
+
+	
+	RequestModel(long sim, long msgFromSim, Date msgDt, long commentFromSim, Date commentTime){
+		this.msgFromSim=msgFromSim;
+		this.msgDt=msgDt;
+		this.commentFromSim=commentFromSim;
+		this.commentTime=commentTime;
+		this.sim=sim;
+	}
+	long msgFromSim;
+	Date msgDt;
+	long commentFromSim;
+	Date commentTime;
+	long sim;
+	
+
+	
+}

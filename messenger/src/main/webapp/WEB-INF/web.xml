@@ -9,6 +9,10 @@
             <param-name>jersey.config.server.provider.packages</param-name>
             <param-value>org.dine.javaprojects.messenger</param-value>
         </init-param>
+        <!-- <init-param>
+        	<param-name>unit:WidgetPU</param-name>
+        	<param-value>persistence/widget</param-value>
+    	</init-param> -->
         <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet-mapping>

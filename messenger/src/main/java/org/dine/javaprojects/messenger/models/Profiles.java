@@ -1,7 +1,15 @@
 package org.dine.javaprojects.messenger.models;
 
+import java.util.Date;
+import java.util.List;
+
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+
+import org.dine.javaprojects.messenger.Message;
 
 @Entity
 	public class Profiles {
@@ -9,6 +17,16 @@ import javax.persistence.Id;
 		@Id
 		private int simNumber;
 		private String name;
+		private Date registeredOn;
+		
+		
+		
+		public Date getRegisteredOn() {
+			return registeredOn;
+		}
+		public void setRegisteredOn(Date registeredOn) {
+			this.registeredOn = registeredOn;
+		}
 		public int getSimNumber() {
 			return simNumber;
 		}

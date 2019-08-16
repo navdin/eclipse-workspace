@@ -1,0 +1,5 @@
+package org.dine.javaprojects.messenger.models;
+
+public class Sim {
+
+}

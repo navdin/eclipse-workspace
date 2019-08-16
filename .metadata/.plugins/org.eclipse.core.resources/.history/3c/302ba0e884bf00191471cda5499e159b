@@ -1,0 +1,303 @@
+package org.dine.javaprojects.messenger;
+
+import java.net.URI;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+
+import org.dine.javaprojects.messenger.exceptions.DataNotFoundException;
+import org.dine.javaprojects.messenger.likesapi.LikesApi;
+import org.dine.javaprojects.messenger.models.ErrorMessage;
+import org.dine.javaprojects.messenger.models.Profiles;
+import org.dine.javaprojects.messenger.models.RequestModel;
+import org.dine.javaprojects.messenger.models.Sim;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.service.ServiceRegistry;
+import org.hibernate.type.TimestampType;
+
+@Path("messages")
+public class MessageResources {
+
+	@GET
+	//@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<Message> getAllMessages() {
+		
+
+		SessionFactory sf=  new Configuration().configure().buildSessionFactory();
+//		SessionFactory sf = configuration.buildSessionFactory(serviceRegistry);
+	    System.out.println("sf created");
+		Session ses=sf.openSession();
+		ses.beginTransaction();
+		Query qr=ses.createQuery("from Message");
+		List<Message> msgs=qr.list();
+		
+		
+//		for(Message msg: msgs) {
+//			List<Long> toList=msg.getToList();
+//			for(long num: toList) {
+//				Sim sim=new Sim();
+//				sim.setSimNumber(num);
+//				msg.getToSimList().add(sim);
+//				try {
+//				ses.save(sim);
+//				}catch(Exception ex) {
+//					
+//				}
+//			}
+//			ses.save(msg);
+//
+//		}
+		ses.getTransaction().commit();
+
+		return msgs;
+	}
+	
+	
+	
+	@GET
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/sim")
+	public List<Message> getSimMessages(RequestModel rm) {
+		
+
+		SessionFactory sf=  new Configuration().configure().buildSessionFactory();
+//		SessionFactory sf = configuration.buildSessionFactory(serviceRegistry);
+	    System.out.println("sf created");
+		Session ses=sf.openSession();
+		ses.beginTransaction();
+		Query qr=ses.createQuery("from Message where fromSim="+rm.getMsgFromSim());
+		List msgs=qr.list();
+		
+		
+		ses.getTransaction().commit();
+		return msgs;
+	}
+	
+	
+	@GET
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/refers/sim")
+	public List<Message> getRefersSimMessages(RequestModel rm) {
+		
+
+		SessionFactory sf=  new Configuration().configure().buildSessionFactory();
+//		SessionFactory sf = configuration.buildSessionFactory(serviceRegistry);
+	    System.out.println("sf created");
+		Session ses=sf.openSession();
+		ses.beginTransaction();
+		Query qr=ses.createQuery("from Sim where simNumber="+rm.getSim());
+		List<Sim> resultList=qr.list();
+		ses.getTransaction().commit();
+		System.out.println("list extracted. fromSim="+(resultList.get(0)).getMsgList().get(0).fromSim);
+		if(resultList.size()==0) {
+			return null;
+		}
+		System.out.println("resultlist created");
+		
+			List<Message> inList=(resultList.get(0)).getMsgList();
+		
+		
+		
+		
+		return inList;
+	}
+	
+	
+	@POST
+	@Produces(MediaType.TEXT_PLAIN)
+	@Path("{id}")
+	public static String main(@PathParam("id") String id) {
+		return "posted id = "+id;
+	}
+	
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/sendMsg")
+	public Message add(Message msg) {
+//		return ml;
+		msg.setDt(new Date());
+		System.out.println(msg.getToList());
+		SessionFactory sf=  new Configuration().configure().buildSessionFactory();
+//		SessionFactory sf = configuration.buildSessionFactory(serviceRegistry);
+	    System.out.println("sf created");
+
+		Session ses=sf.openSession();
+		ses.beginTransaction();
+		
+			ses.save(msg);
+		
+		ses.getTransaction().commit();
+		System.out.println("msg saved");
+		return msg;
+	}
+	
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/comment/like")
+	public Comment erMsg(RequestModel rm, @Context UriInfo uriInfo) {
+		if(rm.getCommentFromSim()==0)
+			throw new DataNotFoundException("Not found");
+		System.out.println("came to /comment/like");
+		
+		DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String ct=rm.getCommentTime();
+//		comment.msgTime = comment.msgTime.replace('T', ' ');
+		System.out.println(rm.getCommentTime());
+	    if (ct.contains("T")) ct = ct.replace('T', ' ');
+//	    if (comment.msgTime.contains("Z")) comment.msgTime = comment.msgTime.replace("Z", "+0000");
+//	    else
+//	    	comment.msgTime = comment.msgTime.substring(0, comment.msgTime.lastIndexOf(':')) + comment.msgTime.substring(comment.msgTime.lastIndexOf(':')+1);
+	    ct=ct.substring(0, ct.indexOf("."));
+	    Date dt=null;
+	         try {
+	        	  dt=fmt.parse(ct);
+	         }catch(Exception ex) {
+	        	 System.out.println("date exception "+ex.getMessage());
+	         }
+		
+		
+		
+		SessionFactory sf=  new Configuration().configure().buildSessionFactory();
+//		SessionFactory sf = configuration.buildSessionFactory(serviceRegistry);
+	    System.out.println("sf created");
+
+	    
+		Session ses=sf.openSession();
+		ses.beginTransaction();
+		Query qr=ses.createQuery("from Comment where fromSim="+rm.getCommentFromSim()+" and dt=:time");
+		qr.setParameter("time", dt, TimestampType.INSTANCE );
+		List commentList=qr.list();
+		Comment comment=(Comment)commentList.get(0);
+		comment.setLikeCount(comment.getLikeCount()+1);
+		Query queryProfiles=ses.createQuery("from Profiles where simNumber="+rm.getLikeBySim());
+		List profileList=queryProfiles.list();
+		comment.getLp().add((Profiles)profileList.get(0));
+		ses.save(comment);
+		
+		ses.getTransaction().commit();
+		
+//		URI uri=uriInfo.getAbsolutePathBuilder().path("id").build();
+//		ErrorMessage erm=new ErrorMessage("Internal server error", 500, "google.com");
+		return comment;
+//		return Response.created(uri)
+//					   .entity(comment)
+//					   .build();
+	}
+	
+	
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/add/comment")
+	public Response addComment(Comment comment, @Context UriInfo uriInfo) {
+		if(comment.fromSim==0)
+			throw new DataNotFoundException("Not found");
+		System.out.println("came to /add/comment");
+		
+		DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//		comment.msgTime = comment.msgTime.replace('T', ' ');
+		System.out.println(comment.msgTime);
+	    if (comment.msgTime.contains("T")) comment.msgTime = comment.msgTime.replace('T', ' ');
+//	    if (comment.msgTime.contains("Z")) comment.msgTime = comment.msgTime.replace("Z", "+0000");
+//	    else
+//	    	comment.msgTime = comment.msgTime.substring(0, comment.msgTime.lastIndexOf(':')) + comment.msgTime.substring(comment.msgTime.lastIndexOf(':')+1);
+	    comment.msgTime=comment.msgTime.substring(0, comment.msgTime.indexOf("."));
+	    Date dt=null;
+	         try {
+	        	  dt=fmt.parse(comment.msgTime);
+	         }catch(Exception ex) {
+	        	 System.out.println("date exception "+ex.getMessage());
+	         }
+		
+		
+		SessionFactory sf=  new Configuration().configure().buildSessionFactory();
+//		SessionFactory sf = configuration.buildSessionFactory(serviceRegistry);
+	    System.out.println("came here 3");
+
+	    comment.setDt(new Date());
+		Session ses=sf.openSession();
+		ses.beginTransaction();
+		Query qr=ses.createQuery("from Message where fromSim="+comment.getMsgFromSim()+" and dt=:time");
+		qr.setParameter("time", dt, TimestampType.INSTANCE );
+		List msgs=qr.list();
+		Message msg=(Message)msgs.get(0);
+		msg.getCommentList().add(comment);
+		ses.save(msg);
+		ses.save(comment);
+		
+		ses.getTransaction().commit();
+		URI uri=uriInfo.getAbsolutePathBuilder().path("id").build();
+		
+		return Response.created(uri)
+					   .entity(comment)
+					   .build();
+		
+	}
+	
+	
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/profile/signup")
+	public Response addComment(Profiles p , @Context UriInfo uriInfo) {
+		
+		System.out.println("came to /profile/signup");
+		p.setRegisteredOn(new Date());
+//		Configuration configuration = new Configuration();
+//	    configuration.configure();
+//	    System.out.println("came here 1");
+//	    ServiceRegistry serviceRegistry =new StandardServiceRegistryBuilder().applySettings(
+//	            configuration.getProperties()).build();
+//	    System.out.println("came here 2");
+
+		SessionFactory sf=  new Configuration().configure().buildSessionFactory();
+//		SessionFactory sf = configuration.buildSessionFactory(serviceRegistry);
+	    System.out.println("came here 3");
+
+		Session ses=sf.openSession();
+		ses.beginTransaction();
+			ses.save(p);
+		ses.getTransaction().commit();
+		URI uri=uriInfo.getAbsolutePathBuilder().path("id").build();
+		//return p;
+		return Response.created(uri)
+					   .entity(p)
+					   .build();
+	}
+	
+	
+	@Path("/likes")
+	@Produces(MediaType.APPLICATION_JSON)
+//	@POST
+	public LikesApi likesby(@Context UriInfo info) {
+		System.out.println("came to messages/likes");
+		LikesApi lap=new LikesApi();
+//		lap.setA(1);
+//		lap.setB(2);
+		return lap;
+	}
+	
+}

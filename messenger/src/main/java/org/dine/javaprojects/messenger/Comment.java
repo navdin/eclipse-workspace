@@ -1,26 +1,109 @@
 package org.dine.javaprojects.messenger;
 
 
+import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
-public class Comment {
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 
-	long id;
+import org.dine.javaprojects.messenger.models.Profiles;
+
+@Entity
+public class Comment implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	Comment(){
+		
+	}
+	
+	Comment(long msgFromSim, String msgTime, Date dt, long fromSim, String comment, List<Long> toList, 
+			long likeCount,List<Profiles> lp){
+		this.msgFromSim=msgFromSim;
+		this.msgTime=msgTime;
+		this.dt=dt;
+		this.fromSim=fromSim;
+		this.comment=comment;
+		this.likeCount=likeCount;
+		this.lp=lp;
+		this.toList=toList;
+	}
+	//long id;
+	@Id
+	Date dt;
+	
+	@Id
+	Long fromSim;
+	
+	String msgTime;
+	
+	long msgFromSim;
+	
+
 	String comment;
-	long msgId; //Message msg
+	@ElementCollection
+	List<Long> toList;
+	 //Message msg
+	
 	long likeCount;
+	
+	@ManyToMany
+	List<Profiles> lp;
+	
+	public String getMsgTime() {
+		return msgTime;
+	}
+
+	public void setMsgTime(String msgTime) {
+		this.msgTime = msgTime;
+	}
+
+	public long getMsgFromSim() {
+		return msgFromSim;
+	}
+
+	public void setMsgFromSim(long msgFromSim) {
+		this.msgFromSim = msgFromSim;
+	}
+	
+	public Date getDt() {
+		return dt;
+	}
+	public void setDt(Date dt) {
+		this.dt = dt;
+	}
+	public Long getFromSim() {
+		return fromSim;
+	}
+	public void setFromSim(Long fromSim) {
+		this.fromSim = fromSim;
+	}
+	public List<Long> getToList() {
+		return toList;
+	}
+	public void setToList(List<Long> toList) {
+		this.toList = toList;
+	}
+	public List<Profiles> getLp() {
+		return lp;
+	}
+	public void setLp(List<Profiles> lp) {
+		this.lp = lp;
+	}
 	public String getComment() {
 		return comment;
 	}
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	public long getMsg() {
-		return msgId;
-	}
-	public void setMsg(long msgId) {
-		this.msgId = msgId;
-	}
+	
 	public long getLikeCount() {
 		return likeCount;
 	}
